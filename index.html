@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Портфолио Разработчика</title>
+    <title>Портфолио</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -25,7 +25,6 @@
                 radial-gradient(circle at 90% 80%, rgba(0, 255, 0, 0.05) 0%, transparent 15%);
         }
 
-        /* Матричный дождь в фоне */
         body::after {
             content: '';
             position: fixed;
@@ -386,7 +385,6 @@
     </style>
 </head>
 <body>
-    <!-- Звездный фон с движением -->
     <div class="stars" id="stars"></div>
 
     <div class="glass-container">
@@ -414,7 +412,6 @@
         </div>
 
         <div class="tab-content">
-            <!-- О себе -->
             <div class="tab-pane active" id="about">
                 <div class="terminal-line">
                     <span class="terminal-prompt">></span>
@@ -439,7 +436,6 @@
                 </div>
             </div>
 
-            <!-- Навыки -->
             <div class="tab-pane" id="skills">
                 <div class="terminal-line">
                     <span class="terminal-prompt">></span>
@@ -491,7 +487,6 @@
                 </div>
             </div>
 
-            <!-- Проекты -->
             <div class="tab-pane" id="projects">
                 <div class="terminal-line">
                     <span class="terminal-prompt">></span>
@@ -549,7 +544,6 @@
                 </div>
             </div>
 
-            <!-- Блог -->
             <div class="tab-pane" id="blog">
                 <div class="terminal-line">
                     <span class="terminal-prompt">></span>
@@ -594,7 +588,6 @@
                 </div>
             </div>
 
-            <!-- Контакты -->
             <div class="tab-pane" id="contact">
                 <div class="terminal-line">
                     <span class="terminal-prompt">></span>
@@ -633,7 +626,6 @@
     </div>
 
     <script>
-        // Создание звездного фона с движением
         function createStars() {
             const starsContainer = document.getElementById('stars');
             const starCount = 150;
@@ -642,29 +634,23 @@
                 const star = document.createElement('div');
                 star.classList.add('star');
                 
-                // Размер звезды (от 1px до 3px)
                 const size = Math.random() * 2 + 1;
                 star.style.width = `${size}px`;
                 star.style.height = `${size}px`;
                 
-                // Позиция звезды
                 const posX = Math.random() * 100;
                 const posY = Math.random() * 100;
                 star.style.left = `${posX}%`;
                 star.style.top = `${posY}%`;
                 
-                // Анимация мерцания
                 star.style.setProperty('--duration', `${Math.random() * 4 + 2}s`);
                 
-                // Яркость звезды
                 const opacity = Math.random() * 0.7 + 0.3;
                 star.style.opacity = opacity;
                 
-                // Добавляем движение звезд
                 const moveX = (Math.random() - 0.5) * 2;
                 const moveY = (Math.random() - 0.5) * 2;
                 
-                // Создаем анимацию движения
                 const animation = document.createElement('style');
                 animation.textContent = `
                     @keyframes moveStar${i} {
@@ -683,39 +669,30 @@
             }
         }
 
-        // Переключение вкладок
         document.querySelectorAll('.tab-btn').forEach(button => {
             button.addEventListener('click', () => {
-                // Убираем активный класс у всех кнопок
                 document.querySelectorAll('.tab-btn').forEach(btn => {
                     btn.classList.remove('active');
                 });
                 
-                // Добавляем активный класс текущей кнопке
                 button.classList.add('active');
                 
-                // Скрываем все панели
                 document.querySelectorAll('.tab-pane').forEach(pane => {
                     pane.classList.remove('active');
                 });
                 
-                // Показываем нужную панель
                 const tabId = button.getAttribute('data-tab');
                 document.getElementById(tabId).classList.add('active');
             });
         });
-
-        // Обработка формы
         document.querySelector('.submit-btn')?.addEventListener('click', function(e) {
             e.preventDefault();
             alert('> Сообщение отправлено! root@dev:~$ echo "Спасибо за контакт, Стас!"');
             document.querySelector('.contact-form').reset();
         });
 
-        // Инициализация звездного фона
         createStars();
 
-        // Эффект печатной машинки для заголовка
         document.addEventListener('DOMContentLoaded', function() {
             const header = document.querySelector('header h1');
             const text = header.textContent;
