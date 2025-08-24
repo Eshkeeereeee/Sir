@@ -2,21 +2,735 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ваш сайт</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Портфолио Разработчика</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        body {
+            background: #000;
+            min-height: 100vh;
+            padding: 20px;
+            color: #00ff00;
+            position: relative;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 0, 0.05) 0%, transparent 15%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 0, 0.05) 0%, transparent 15%);
+        }
+
+        /* Матричный дождь в фоне */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.1) 50%, transparent 50%),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
+            background-size: 100% 40px, 40px 100%, 100% 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: #00ff00;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 3s) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .glass-container {
+            background: rgba(0, 20, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 0, 0.2),
+                inset 0 0 10px rgba(0, 255, 0, 0.1);
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .glass-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(0, 255, 0, 0.05) 0%, 
+                rgba(0, 255, 0, 0) 50%,
+                rgba(0, 20, 0, 0.1) 100%);
+            pointer-events: none;
+            border-radius: 12px;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 30, 0, 0.5);
+            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+            position: relative;
+        }
+
+        header::before {
+            content: '>';
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00ff00;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            font-weight: normal;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            background: rgba(0, 30, 0, 0.5);
+            padding: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: rgba(0, 40, 0, 0.7);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #00ff00;
+            padding: 10px 20px;
+            margin: 3px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: normal;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn:hover {
+            background: rgba(0, 60, 0, 0.8);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+
+        .tab-btn.active {
+            background: rgba(0, 100, 0, 0.9);
+            border-color: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        .tab-content {
+            padding: 2rem;
+            min-height: 500px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .terminal-line {
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .terminal-prompt {
+            color: #00ff00;
+            margin-right: 10px;
+        }
+
+        .terminal-command {
+            color: #00aaff;
+        }
+
+        .terminal-output {
+            color: #ffff00;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .skill-item {
+            background: rgba(0, 40, 0, 0.7);
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .skill-item:hover {
+            background: rgba(0, 60, 0, 0.8);
+            border-color: rgba(0, 255, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .skill-item .level {
+            font-size: 0.8rem;
+            color: #00aaff;
+            margin-top: 5px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: rgba(0, 40, 0, 0.7);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .project-card:hover {
+            background: rgba(0, 60, 0, 0.8);
+            border-color: rgba(0, 255, 0, 0.5);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+
+        .project-header {
+            background: rgba(0, 30, 0, 0.8);
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+        }
+
+        .project-body {
+            padding: 1rem;
+        }
+
+        .blog-posts {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .blog-post {
+            background: rgba(0, 40, 0, 0.7);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .blog-post:hover {
+            background: rgba(0, 60, 0, 0.8);
+            border-color: rgba(0, 255, 0, 0.5);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+
+        .blog-post h3 {
+            color: #00ff00;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 30, 0, 0.7);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 6px;
+            color: #00ff00;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .form-input::placeholder {
+            color: rgba(0, 255, 0, 0.5);
+        }
+
+        .submit-btn {
+            background: rgba(0, 100, 0, 0.9);
+            color: #00ff00;
+            border: 1px solid rgba(0, 255, 0, 0.5);
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: rgba(0, 150, 0, 0.9);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 30, 0, 0.5);
+            border-top: 1px solid rgba(0, 255, 0, 0.2);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 40, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+        }
+
+        .social-link:hover {
+            background: rgba(0, 60, 0, 0.8);
+            border-color: rgba(0, 255, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .code-block {
+            background: rgba(0, 20, 0, 0.8);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .comment { color: #666; }
+        .keyword { color: #00aaff; }
+        .string { color: #ff6b6b; }
+        .function { color: #4ecdc4; }
+        .number { color: #ff9ff3; }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab-btn {
+                width: 90%;
+                margin: 3px 0;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div id="bubbles"></div>
-    <div id="counter-box">
-        <span id="counter">0</span>
+    <!-- Звездный фон с движением -->
+    <div class="stars" id="stars"></div>
+
+    <div class="glass-container">
+        <header>
+            <h1>root@dev:~$ whoami</h1>
+            <p>Стас | 14 лет | Разработчик | Античит специалист</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="about">
+                <i class="fas fa-user"></i> about_me
+            </button>
+            <button class="tab-btn" data-tab="skills">
+                <i class="fas fa-code"></i> skills
+            </button>
+            <button class="tab-btn" data-tab="projects">
+                <i class="fas fa-project-diagram"></i> projects
+            </button>
+            <button class="tab-btn" data-tab="blog">
+                <i class="fas fa-blog"></i> blog
+            </button>
+            <button class="tab-btn" data-tab="contact">
+                <i class="fas fa-envelope"></i> contact
+            </button>
+        </div>
+
+        <div class="tab-content">
+            <!-- О себе -->
+            <div class="tab-pane active" id="about">
+                <div class="terminal-line">
+                    <span class="terminal-prompt">></span>
+                    <span class="terminal-command">cat profile.txt</span>
+                </div>
+                <div class="terminal-output">
+                    <p>Привет! Меня зовут Стас, мне 14 лет.</p>
+                    <p>Я разработчик с более чем 2-летним опытом в C++ и Lua.</p>
+                    <p>Специализируюсь на системном программировании, античитах и оптимизации производительности.</p>
+                    <p>Увлекаюсь reverse engineering и защитой программного обеспечения.</p>
+                </div>
+                
+                <div class="terminal-line" style="margin-top: 2rem;">
+                    <span class="terminal-prompt">></span>
+                    <span class="terminal-command">system_info</span>
+                </div>
+                <div class="terminal-output">
+                    <p><strong>Возраст:</strong> 14 лет</p>
+                    <p><strong>Опыт:</strong> 2+ лет C++ и Lua</p>
+                    <p><strong>Специализация:</strong> Античит системы, системное программирование</p>
+                    <p><strong>Интересы:</strong> Reverse engineering, защита ПО, оптимизация</p>
+                </div>
+            </div>
+
+            <!-- Навыки -->
+            <div class="tab-pane" id="skills">
+                <div class="terminal-line">
+                    <span class="terminal-prompt">></span>
+                    <span class="terminal-command">ls -la skills/</span>
+                </div>
+                
+                <div class="skills-grid">
+                    <div class="skill-item">
+                        <div><i class="fab fa-python"></i> Python 3+</div>
+                        <div class="level">Средний уровень</div>
+                    </div>
+                    <div class="skill-item">
+                        <div><i class="fas fa-c"></i> C++</div>
+                        <div class="level">Высокий уровень (2+ лет)</div>
+                    </div>
+                    <div class="skill-item">
+                        <div><i class="fas fa-code"></i> Lua</div>
+                        <div class="level">Эксперт (2+ лет)</div>
+                    </div>
+                    <div class="skill-item">
+                        <div><i class="fab fa-java"></i> Java</div>
+                        <div class="level">Средний уровень</div>
+                    </div>
+                    <div class="skill-item">
+                        <div><i class="fab fa-js"></i> JavaScript</div>
+                        <div class="level">Средний уровень</div>
+                    </div>
+                    <div class="skill-item">
+                        <div><i class="fas fa-database"></i> SQLite</div>
+                        <div class="level">Средний уровень</div>
+                    </div>
+                    <div class="skill-item">
+                        <div><i class="fas fa-shield-alt"></i> Anti-Cheat</div>
+                        <div class="level">Специалист</div>
+                    </div>
+                    <div class="skill-item">
+                        <div><i class="fas fa-bug"></i> Reverse Eng.</div>
+                        <div class="level">Средний уровень</div>
+                    </div>
+                </div>
+                
+                <div class="terminal-line" style="margin-top: 2rem;">
+                    <span class="terminal-prompt">></span>
+                    <span class="terminal-command">show_expertise</span>
+                </div>
+                <div class="terminal-output">
+                    <p><strong>Эксперт:</strong> Lua, C++ (2+ лет опыта)</p>
+                    <p><strong>Специализация:</strong> Античит системы и защита ПО</p>
+                </div>
+            </div>
+
+            <!-- Проекты -->
+            <div class="tab-pane" id="projects">
+                <div class="terminal-line">
+                    <span class="terminal-prompt">></span>
+                    <span class="terminal-command">projects_list</span>
+                </div>
+                
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3>Anti-Cheat Engine</h3>
+                        </div>
+                        <div class="project-body">
+                            <p>Система защиты от читов для игровых приложений с использованием хуков и мониторинга памяти.</p>
+                            <div style="margin-top: 1rem; color: #00aaff;">
+                                <i class="fas fa-c"></i> C++ | <i class="fas fa-code"></i> Lua
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3>Memory Scanner</h3>
+                        </div>
+                        <div class="project-body">
+                            <p>Инструмент для сканирования и анализа памяти процессов с возможностью обнаружения модификаций.</p>
+                            <div style="margin-top: 1rem; color: #00aaff;">
+                                <i class="fas fa-c"></i> C++ | <i class="fab fa-windows"></i> WinAPI
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3>Game Hook System</h3>
+                        </div>
+                        <div class="project-body">
+                            <p>Система хуков для перехвата и модификации игровых функций в реальном времени.</p>
+                            <div style="margin-top: 1rem; color: #00aaff;">
+                                <i class="fas fa-c"></i> C++ | <i class="fas fa-code"></i> Assembly
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3>Lua Script Engine</h3>
+                        </div>
+                        <div class="project-body">
+                            <p>Встраиваемый движок Lua скриптов с расширенными возможностями интеграции.</p>
+                            <div style="margin-top: 1rem; color: #00aaff;">
+                                <i class="fas fa-code"></i> Lua | <i class="fas fa-c"></i> C++
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Блог -->
+            <div class="tab-pane" id="blog">
+                <div class="terminal-line">
+                    <span class="terminal-prompt">></span>
+                    <span class="terminal-command">blog_posts</span>
+                </div>
+                
+                <div class="blog-posts">
+                    <div class="blog-post">
+                        <h3>Как создать эффективную систему античита</h3>
+                        <p style="color: #666; margin: 0.5rem 0;">15 марта 2024</p>
+                        <p>Подробное руководство по созданию античит систем с использованием хуков, мониторинга памяти и проверки целостности.</p>
+                        <div class="code-block">
+                            <span class="comment">// Пример базовой проверки целостности</span><br>
+                            <span class="keyword">bool</span> <span class="function">CheckIntegrity</span>() {<br>
+                            &nbsp;&nbsp;<span class="keyword">return</span> <span class="function">CalculateChecksum</span>() == <span class="number">0x1A2B3C4D</span>;<br>
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="blog-post">
+                        <h3>Оптимизация Lua скриптов для игровых движков</h3>
+                        <p style="color: #666; margin: 0.5rem 0;">8 марта 2024</p>
+                        <p>Советы и хитрости по оптимизации производительности Lua скриптов в игровых приложениях.</p>
+                        <div class="code-block">
+                            <span class="comment">-- Использование локальных переменных для повышения производительности</span><br>
+                            <span class="keyword">local</span> x, y = <span class="number">10</span>, <span class="number">20</span><br>
+                            <span class="keyword">local</span> result = x * y + (x ^ <span class="number">2</span>)
+                        </div>
+                    </div>
+                    
+                    <div class="blog-post">
+                        <h3>Reverse Engineering: как защитить свой код</h3>
+                        <p style="color: #666; margin: 0.5rem 0;">1 марта 2024</p>
+                        <p>Анализ методов reverse engineering и способы защиты от декомпиляции и модификации.</p>
+                        <div class="code-block">
+                            <span class="comment">// Пример обфускации кода</span><br>
+                            <span class="keyword">#ifdef</span> <span class="function">OBFUSCATE</span><br>
+                            &nbsp;&nbsp;<span class="keyword">int</span> (*func_ptr)() = &amp;obfuscated_function;<br>
+                            <span class="keyword">#endif</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Контакты -->
+            <div class="tab-pane" id="contact">
+                <div class="terminal-line">
+                    <span class="terminal-prompt">></span>
+                    <span class="terminal-command">contact_form</span>
+                </div>
+                
+                <div class="contact-form">
+                    <div class="form-group">
+                        <input type="text" class="form-input" placeholder="Ваше имя" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-input" placeholder="Ваш email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" placeholder="Тема сообщения">
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-input" rows="6" placeholder="Ваше сообщение" required></textarea>
+                    </div>
+                    <button class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Отправить сообщение
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>root@dev:~$ echo "© 2024 Стас - Портфолио разработчика"</p>
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-stack-overflow"></i></a>
+            </div>
+        </footer>
     </div>
-    <button id="menu-button">Открыть меню</button>
-    <div id="menu">
-        <div id="arrow" class="arrow"></div>
-        <button id="reset-score">Сбросити очки</button>
-        <button id="upgrade-score">Знищити бали<span id="upgrade-cost">24</span></button>
-    </div>
-    <script src="script.js"></script>
+
+    <script>
+        // Создание звездного фона с движением
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 150;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Размер звезды (от 1px до 3px)
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                // Позиция звезды
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                star.style.left = `${posX}%`;
+                star.style.top = `${posY}%`;
+                
+                // Анимация мерцания
+                star.style.setProperty('--duration', `${Math.random() * 4 + 2}s`);
+                
+                // Яркость звезды
+                const opacity = Math.random() * 0.7 + 0.3;
+                star.style.opacity = opacity;
+                
+                // Добавляем движение звезд
+                const moveX = (Math.random() - 0.5) * 2;
+                const moveY = (Math.random() - 0.5) * 2;
+                
+                // Создаем анимацию движения
+                const animation = document.createElement('style');
+                animation.textContent = `
+                    @keyframes moveStar${i} {
+                        0% { transform: translate(0px, 0px); }
+                        25% { transform: translate(${moveX}px, ${moveY}px); }
+                        50% { transform: translate(${moveX * 2}px, ${moveY * 2}px); }
+                        75% { transform: translate(${moveX}px, ${moveY}px); }
+                        100% { transform: translate(0px, 0px); }
+                    }
+                `;
+                document.head.appendChild(animation);
+                
+                star.style.animation += `, moveStar${i} ${Math.random() * 10 + 10}s infinite linear`;
+                
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Переключение вкладок
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Убираем активный класс у всех кнопок
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Добавляем активный класс текущей кнопке
+                button.classList.add('active');
+                
+                // Скрываем все панели
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('active');
+                });
+                
+                // Показываем нужную панель
+                const tabId = button.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Обработка формы
+        document.querySelector('.submit-btn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('> Сообщение отправлено! root@dev:~$ echo "Спасибо за контакт, Стас!"');
+            document.querySelector('.contact-form').reset();
+        });
+
+        // Инициализация звездного фона
+        createStars();
+
+        // Эффект печатной машинки для заголовка
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.querySelector('header h1');
+            const text = header.textContent;
+            header.textContent = '';
+            
+            let i = 0;
+            const typing = setInterval(() => {
+                if (i < text.length) {
+                    header.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typing);
+                }
+            }, 100);
+        });
+    </script>
 </body>
 </html>
